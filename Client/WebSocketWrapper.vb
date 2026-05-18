@@ -1,6 +1,7 @@
 Imports System.Net.WebSockets
 Imports System.Text
 Imports System.Threading
+Imports System.Threading.Tasks
 
 ''' <summary>
 ''' Wrapper that makes WebSocketClient compatible with Socket-like interface
@@ -15,6 +16,12 @@ Public Class WebSocketWrapper
     Public Sub New(hostname As String, port As Integer)
         Uri = New Uri($"ws://{hostname}:{port}/")
     End Sub
+
+    Public ReadOnly Property Connected As Boolean
+        Get
+            Return IsConnected AndAlso WebSocket IsNot Nothing AndAlso WebSocket.State = WebSocketState.Open
+        End Get
+    End Property
 
     Public Sub Connect()
         Try
@@ -91,6 +98,37 @@ Public Class WebSocketWrapper
             Return result.BytesReceived
         End If
         Return 0
+    End Function
+
+    Public Sub Shutdown(how As System.Net.Sockets.SocketShutdown)
+        ' Not needed for WebSocket
+    End Sub
+
+    Public Sub Close()
+        Try
+            If WebSocket IsNot Nothing AndAlso WebSocket.State = WebSocketState.Open Then
+                WebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None).Wait()
+            End If
+            IsConnected = False
+        Catch ex As Exception
+            ' Ignore
+        End Try
+    End Sub
+
+    Public Sub Dispose()
+        Try
+            If WebSocket IsNot Nothing Then
+                WebSocket.Dispose()
+            End If
+            IsConnected = False
+        Catch ex As Exception
+            ' Ignore
+        End Try
+    End Sub
+
+    Public Function Poll(microSeconds As Integer, selectMode As System.Net.Sockets.SelectMode) As Boolean
+        ' Check if socket is connected
+        Return Connected
     End Function
 End Class
 

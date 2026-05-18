@@ -13,6 +13,7 @@
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+    <GenerateResourceUsePreserializedResources>false</GenerateResourceUsePreserializedResources>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -135,12 +136,15 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Networking\Server.vb" />
+    <Compile Include="Networking\WebSocketServer.vb" />
     <Compile Include="Requests\RequestsWorker.vb" />
     <Compile Include="Requests\TaskList.vb" />
     <Compile Include="Resources\Stub.vb" />
     <Compile Include="Serializer\Pack.vb" />
     <Compile Include="Settings.vb" />
   </ItemGroup>
+  <!-- Binary .resx files excluded to avoid resource compilation issues with .NET Framework 4.8 -->
+  <!--
   <ItemGroup>
     <EmbeddedResource Include="Forms\Builder.resx">
       <DependentUpon>Builder.vb</DependentUpon>
@@ -167,6 +171,7 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  -->
   <ItemGroup>
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>

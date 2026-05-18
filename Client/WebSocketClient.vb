@@ -5,7 +5,6 @@ Imports System.Threading
 Public Class WebSocketClient
     Private WebSocket As ClientWebSocket
     Private Uri As Uri
-    Private Encryption As New Pack.AesEncryption()
     Public IsConnected As Boolean = False
 
     Public Sub New(hostname As String, port As Integer)

@@ -35,6 +35,22 @@ Public Class Client
 
     End Sub
 
+    ' Alternative constructor for WebSocket connections
+    Sub New(Optional isWebSocket As Boolean = False)
+        ' Initialize properties for WebSocket mode
+        ClientSocket = Nothing
+        ServerSocket = Nothing
+        IsConnected = True
+        BufferLength = 0
+        Buffer = New Byte(49999) {}
+        MS = New MemoryStream
+        IP = "websocket"
+        LV = Nothing
+        If isWebSocket Then
+            Settings.Online.Add(Me)
+        End If
+    End Sub
+
     Async Sub ListenForClientData(ByVal ar As IAsyncResult)
         If IsConnected = False OrElse Not ClientSocket.Connected Then
             isDisconnected()

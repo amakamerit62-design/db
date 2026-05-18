@@ -1,0 +1,21 @@
+
+Main()	
+Connect()	
+SendIdentification()	
+BeginReceive()
+Send()	
+EndSend()	
+isDisconnected()
+Ping()	
+Read()	
+Install()	
+SelfDelete()	
+Download()	
+Reflection()	
+Capture()
+AES_Encryptor() / AES_Decryptor()
+
+SendIdentification — "gathering system info"
+BeginReceive — "listening for commands"
+SelfDelete — "anti-forensics"
+Capture — "surveillance"

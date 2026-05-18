@@ -1,9 +1,6 @@
 {
   "name": "VB.NET RAT Server",
-  "image": "mcr.microsoft.com/devcontainers/dotnet:7.0",
-  "features": {
-    "ghcr.io/devcontainers/features/dotnet:1": {}
-  },
+  "image": "mcr.microsoft.com/devcontainers/windows/server:ltsc2022",
   "forwardPorts": [9823, 9824, 9825, 9826],
   "postCreateCommand": "cd /workspaces/db && dotnet build",
   "customizations": {

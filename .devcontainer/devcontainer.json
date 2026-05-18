@@ -1,23 +1,19 @@
 {
   "name": "VB.NET RAT Server",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
-  "features": {
-    "ghcr.io/devcontainers/features/dotnet:2": {
-      "version": "8.0"
+  "image": "mcr.microsoft.com/devcontainers/windows/server:ltsc2022",
+  "forwardPorts": [9823, 9824, 9825, 9826],
+  "postCreateCommand": "cd /workspaces/db && dotnet build",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp"
+      ]
     }
   },
-  "forwardPorts": [9823, 9824, 9825, 9826],
   "portsAttributes": {
     "9823": {
       "label": "Server",
-      "onAutoForward": "notify",
-      "visibility": "public"
-    }
-  },
-  "postCreateCommand": "dotnet restore",
-  "customizations": {
-    "vscode": {
-      "extensions": ["ms-dotnettools.csharp"]
+      "onAutoForward": "notify"
     }
   }
 }
